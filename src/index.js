@@ -5,12 +5,16 @@ const Module = require('module').Module
 const oldResolveFilename = Module._resolveFilename
 const installedMarker = '__require-self-ref-installed'
 
+const cache = new Map()
+
 function isSelfRefRequire (requestedPackage) {
   const prefix = requestedPackage.substring(0, 2)
   return prefix === '~/' || prefix === '~'
 }
 
 function getRootDir (start) {
+  const cached = cache.get(start)
+  if (cached) return cached
   let currentDir = path.dirname(start)
   while (true) {
     const packagePath = path.join(currentDir, 'package.json')
@@ -18,7 +22,9 @@ function getRootDir (start) {
       currentDir = path.resolve(path.join(currentDir, '..'))
       continue
     }
-    return path.resolve(currentDir)
+    const resolved = path.resolve(currentDir)
+    cache.set(start, resolved)
+    return resolved
   }
 }
 
