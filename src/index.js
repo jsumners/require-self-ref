@@ -1,8 +1,26 @@
 'use strict'
-var lassoPackageRoot = require('lasso-package-root')
-var Module = require('module').Module
-var oldResolveFilename = Module._resolveFilename
-var installedMarker = '__require-self-ref-installed'
+const fs = require('fs')
+const path = require('path')
+const Module = require('module').Module
+const oldResolveFilename = Module._resolveFilename
+const installedMarker = '__require-self-ref-installed'
+
+function isSelfRefRequire (requestedPackage) {
+  const prefix = requestedPackage.substring(0, 2)
+  return prefix === '~/' || prefix === '~'
+}
+
+function getRootDir (start) {
+  let currentDir = path.dirname(start)
+  while (true) {
+    const packagePath = path.join(currentDir, 'package.json')
+    if (!fs.existsSync(packagePath)) {
+      currentDir = path.resolve(path.join(currentDir, '..'))
+      continue
+    }
+    return path.resolve(currentDir)
+  }
+}
 
 if (!Module[installedMarker]) {
   Object.defineProperty(Module, installedMarker, {
@@ -10,21 +28,22 @@ if (!Module[installedMarker]) {
   })
 
   Module._resolveFilename = function (request, parent, isMain) {
-    if (request.charAt(0) !== '.') {
-      var firstSlash = request.indexOf('/')
-      var targetPackageName = firstSlash === -1 ? request : request.substring(0, firstSlash)
-
-      if (targetPackageName === '~') {
-        var packagetDir = lassoPackageRoot.getRootDir(parent.filename)
-        if (packagetDir) {
-          var actualRequest = firstSlash === -1
-            ? packagetDir
-            : packagetDir + request.substring(firstSlash)
-          return oldResolveFilename.call(this, actualRequest, parent, isMain)
-        }
+    if (!parent.filename) return oldResolveFilename.call(this, request, parent, isMain)
+    if (isSelfRefRequire(request)) {
+      const rootDir = getRootDir(parent.filename)
+      if (rootDir) {
+        const firstSlashPos = request.indexOf('/')
+        const actualRequest = firstSlashPos === -1
+          ? rootDir
+          : rootDir + request.substring(firstSlashPos)
+        return oldResolveFilename.call(this, actualRequest, parent, isMain)
       }
     }
-
     return oldResolveFilename.call(this, request, parent, isMain)
   }
+}
+
+module.exports.internals = {
+  isSelfRefRequire,
+  getRootDir
 }
