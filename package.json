@@ -4,14 +4,12 @@
   "description": "Solves the relative path problem in Node.js by allowing a require call to reference the current package",
   "main": "src/index.js",
   "scripts": {
-    "test": "npm run mocha && npm run jshint",
-    "lint": "standard",
-    "mocha": "mocha --ui bdd --reporter spec ./test",
-    "jshint": "jshint src/"
+    "test": "tap 'test/**/*.test.js'",
+    "lint": "standard"
   },
   "precommit": [
     "lint",
-    "mocha"
+    "test"
   ],
   "keywords": [
     "require",
@@ -22,11 +20,9 @@
   "author": "Patrick Steele-Idem <pnidem@gmail.com>",
   "license": "MIT",
   "devDependencies": {
-    "chai": "^3.5.0",
-    "jshint": "^2.9.3",
-    "mocha": "^3.0.2",
     "pre-commit": "^1.2.2",
-    "standard": "^10.0.1"
+    "standard": "^10.0.1",
+    "tap": "^10.3.1"
   },
   "dependencies": {
     "lasso-package-root": "^1.0.0"
