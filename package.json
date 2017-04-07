@@ -5,9 +5,14 @@
   "main": "src/index.js",
   "scripts": {
     "test": "npm run mocha && npm run jshint",
+    "lint": "standard",
     "mocha": "mocha --ui bdd --reporter spec ./test",
     "jshint": "jshint src/"
   },
+  "precommit": [
+    "lint",
+    "mocha"
+  ],
   "keywords": [
     "require",
     "relative",
@@ -19,7 +24,9 @@
   "devDependencies": {
     "chai": "^3.5.0",
     "jshint": "^2.9.3",
-    "mocha": "^3.0.2"
+    "mocha": "^3.0.2",
+    "pre-commit": "^1.2.2",
+    "standard": "^10.0.1"
   },
   "dependencies": {
     "lasso-package-root": "^1.0.0"

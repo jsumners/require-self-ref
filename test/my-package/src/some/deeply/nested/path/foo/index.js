@@ -1,1 +1,1 @@
-exports.bar = require('~/src/util/bar');
+exports.bar = require('~/src/util/bar')

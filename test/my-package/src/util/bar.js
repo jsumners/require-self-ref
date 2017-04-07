@@ -1,2 +1,1 @@
-exports.bar = true;
-
+exports.bar = true
