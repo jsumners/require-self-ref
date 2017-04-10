@@ -1,7 +1,7 @@
 @jsumners/require-self-ref
 ================
 
-**Fork Notice:** this is a fork of the [original require-self-ref][orignal].
+**Fork Notice:** this is a fork of the [original require-self-ref][original].
 This fork removes production dependencies so that it is a fully self-contained
 module. Any issues with *this fork* should **not** be directed at the upstream
 project.
