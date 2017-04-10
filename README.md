@@ -1,5 +1,10 @@
-require-self-ref
+@jsumners/require-self-ref
 ================
+
+**Fork Notice:** this is a fork of the [original require-self-ref][orignal].
+This fork removes production dependencies so that it is a fully self-contained
+module. Any issues with *this fork* should **not** be directed at the upstream
+project.
 
 Solves the relative path problem in Node.js by allowing the target module argument of a `require` call to be relative to the root directory of the containing package:
 
@@ -11,7 +16,7 @@ Given a JavaScript module at `my-package/src/some/deeply/nested/path/foo/index.j
 Without `require-self-ref`:
 
 ```javascript
-require('../../../../../../util/bar');
+require('../../../../../../util/bar')
 ```
 
 :confused:
@@ -19,15 +24,17 @@ require('../../../../../../util/bar');
 And _with_ `require-self-ref` installed:
 
 ```javascript
-require('~/src/util/bar');
+require('~/src/util/bar')
 ```
 
 :smile:
 
+[original]: https://github.com/patrick-steele-idem/require-self-ref
+
 # Installation
 
 ```bash
-npm install require-self-ref
+npm install @jsumners/require-self-ref
 ```
 
 # Usage
@@ -35,12 +42,12 @@ npm install require-self-ref
 At the top of the main entry for your application add the following line:
 
 ```javascript
-require('require-self-ref');
+require('@jsumners/require-self-ref')
 ```
 
 # Important
 
-- Your package must have a `package.json` file at the root and that `package.json` file must have a `"name"` property
+- Your package must have a `package.json` file at the root
 - ***Use at your own risk*** (this package monkey-patches the Node.js require system and it depends on internals of Node.js that may change in the future)
 - Compatible with all versions of Node.js
 
